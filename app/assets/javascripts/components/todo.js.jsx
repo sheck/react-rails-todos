@@ -1,7 +1,10 @@
 var Todo = React.createClass({
 
   getInitialState: function() {
-    return { completed: (this.props.todo.completed_at != null) }
+    return {
+      completed: (this.props.todo.completed_at != null),
+      isEditing: false
+    }
   },
 
   handleDelete: function(e) {
@@ -30,14 +33,32 @@ var Todo = React.createClass({
     color: '#999'
   },
 
+  beginEditing: function() {
+    this.setState({isEditing: true});
+  },
+
+  finishEditing: function(e) {
+    this.setState({isEditing: false});
+    // $.ajax({
+    //   method: 'PATCH',
+    //   url: '/todos/' + this.props.todo.id,
+    //   data
+    // })
+  },
+
   render: function() {
     return(
       <div className='todo'>
         <label className='control checkbox'>
           <input type='checkbox' checked={this.state.completed} onChange={this.handleCompletion} />
           <span className='control-indicator'></span>
-          <span style={this.state.completed ? this.completedStyle : this.incompleteStyle }>{ this.props.todo.name }</span>
         </label>
+        {this.state.isEditing ?
+        <input className='todo-name' type='text' autoFocus='true' onBlur={this.finishEditing} name='name' value={this.props.todo.name}>
+        </input>
+        :
+        <span className='todo-name' onClick={this.beginEditing} style={this.state.completed ? this.completedStyle : this.incompleteStyle }>{ this.props.todo.name }</span>
+        }
         <button className='delete' onClick={this.handleDelete} title='Delete Todo'>X</button>
       </div>
     )

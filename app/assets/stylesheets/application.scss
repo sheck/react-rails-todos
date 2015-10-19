@@ -26,6 +26,7 @@
   padding-left: 1.5rem;
   color: #555;
   cursor: pointer;
+  height: 1em;
 }
 .control input {
   position: absolute;
@@ -137,7 +138,7 @@ button {
   background: transparent;
   cursor: pointer;
   border-radius: 4px;
-  margin: 8px;
+  // margin: 8px;
   color: #0074d9;
   padding: .25em .5em;
   &:active {
@@ -184,7 +185,7 @@ button.delete {
 .todo {
   display: flex;
   align-items: center;
-  label {
+  > .todo-name {
     flex-grow: 1;
   }
 }
