@@ -3,7 +3,8 @@ var Todo = React.createClass({
   getInitialState: function() {
     return {
       completed: (this.props.todo.completed_at != null),
-      isEditing: false
+      isEditing: false,
+      name: this.props.todo.name
     }
   },
 
@@ -39,11 +40,22 @@ var Todo = React.createClass({
 
   finishEditing: function(e) {
     this.setState({isEditing: false});
-    // $.ajax({
-    //   method: 'PATCH',
-    //   url: '/todos/' + this.props.todo.id,
-    //   data
-    // })
+    $.ajax({
+      method: 'PATCH',
+      url: '/todos/' + this.props.todo.id,
+      data: {
+        todo : {
+          name: this.state.name
+        }
+      },
+      success: function(data) {
+        this.props.handleChangeTodo(this.props.todo, data);
+      }.bind(this)
+    })
+  },
+
+  handleEdit: function (e) {
+    this.setState({name: e.target.value})
   },
 
   render: function() {
@@ -54,7 +66,7 @@ var Todo = React.createClass({
           <span className='control-indicator'></span>
         </label>
         {this.state.isEditing ?
-        <input className='todo-name' type='text' autoFocus='true' onBlur={this.finishEditing} name='name' value={this.props.todo.name}>
+        <input className='todo-name' type='text' autoFocus='true' onBlur={this.finishEditing} name='name' onChange={this.handleEdit} value={this.state.name}>
         </input>
         :
         <span className='todo-name' onClick={this.beginEditing} style={this.state.completed ? this.completedStyle : this.incompleteStyle }>{ this.props.todo.name }</span>
