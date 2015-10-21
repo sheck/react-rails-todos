@@ -40,18 +40,20 @@ var Todo = React.createClass({
 
   finishEditing: function(e) {
     this.setState({isEditing: false});
-    $.ajax({
-      method: 'PATCH',
-      url: '/todos/' + this.props.todo.id,
-      data: {
-        todo : {
-          name: this.state.name
-        }
-      },
-      success: function(data) {
-        this.props.handleChangeTodo(this.props.todo, data);
-      }.bind(this)
-    })
+    if (this.state.name != this.props.todo.name) {
+      $.ajax({
+        method: 'PATCH',
+        url: '/todos/' + this.props.todo.id,
+        data: {
+          todo : {
+            name: this.state.name
+          }
+        },
+        success: function(data) {
+          this.props.handleChangeTodo(this.props.todo, data);
+        }.bind(this)
+      })
+    }
   },
 
   handleEdit: function (e) {
@@ -69,7 +71,7 @@ var Todo = React.createClass({
         <input className='todo-name' type='text' autoFocus='true' onBlur={this.finishEditing} name='name' onChange={this.handleEdit} value={this.state.name}>
         </input>
         :
-        <span className='todo-name' onClick={this.beginEditing} style={this.state.completed ? this.completedStyle : this.incompleteStyle }>{ this.props.todo.name }</span>
+        <span className='todo-name' onClick={this.beginEditing} style={this.state.completed ? this.completedStyle : this.incompleteStyle }>{ this.state.name }</span>
         }
         <button className='delete' onClick={this.handleDelete} title='Delete Todo'>X</button>
       </div>
